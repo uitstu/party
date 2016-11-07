@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_map"
+        icon="@drawable/tab_map"
+        title="Map" />
+    <tab
+        id="@+id/tab_chatting"
+        icon="@drawable/tab_map"
+        title="Chatting" />
+
+    <tab
+        id="@+id/tab_advertising"
+        icon="@drawable/tab_map"
+        title="Advertising" />
+
+</tabs>

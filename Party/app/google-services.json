@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "819066265913",
+    "firebase_url": "https://party-899c1.firebaseio.com",
+    "project_id": "party-899c1",
+    "storage_bucket": "party-899c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819066265913:android:066f6f6a2c9c9466",
+        "android_client_info": {
+          "package_name": "com.uitstu.party"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819066265913-0p6mdlh7j43d1vtql0a8nbg1j23hfm7q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZcKqFaWmlPj3qbQkpGyyWUkkIH5m53ro"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
