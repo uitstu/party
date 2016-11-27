@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    tools:context="com.uitstu.party.LoginActivity">
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <EditText
+            android:text="uitstu@gmail.com"
+            android:id="@+id/edtID"
+            android:inputType="textEmailAddress"
+            android:background="@color/place_autocomplete_search_hint"
+            android:hint="ID"
+            android:textColorHint="#fff"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+
+        <EditText
+            android:text="123456"
+            android:inputType="textPassword"
+            android:id="@+id/edtPassword"
+            android:background="@color/place_autocomplete_search_hint"
+            android:hint="Password"
+            android:textColorHint="#fff"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:text="Login"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:text="Register"
+            android:textSize="18dp"
+            android:textColor="#00f"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <!--
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#007"
+        >
+        <TextView
+            android:text="P A R T Y"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+    -->
+</FrameLayout>

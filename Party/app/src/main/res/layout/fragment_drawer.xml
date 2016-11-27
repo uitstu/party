@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#fff"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvEditInfo"
+            android:layout_centerHorizontal="true"
+            android:text="Edit your info"
+            android:textSize="25dp"
+            android:textColor="#00f"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:id="@+id/tvLogout"
+            android:layout_below="@+id/tvEditInfo"
+            android:layout_centerHorizontal="true"
+            android:text="Log out"
+            android:textSize="25dp"
+            android:textColor="#00f"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true">
+
+        <FrameLayout
+            android:id="@+id/flSub"
+            android:layout_centerHorizontal="true"
+            android:background="#000"
+            android:layout_width="match_parent"
+            android:layout_height="320dp">
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/ivDrawerAvatar"
+                android:layout_centerHorizontal="true"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvDrawerName"
+            android:text="\nYour name: Waiting"
+            android:textSize="25dp"
+            android:layout_below="@+id/flSub"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvDrawerLocation"
+            android:text="\nYour location: Waiting"
+            android:textSize="25dp"
+            android:layout_below="@+id/tvDrawerName"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvVerhicle"
+            android:text="\nYour going mode: Waiting"
+            android:textSize="25dp"
+            android:layout_below="@+id/tvDrawerLocation"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvCurVelocity"
+            android:text="\n\nWith velocity: Waiting"
+            android:textSize="25dp"
+            android:layout_below="@+id/tvVerhicle"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

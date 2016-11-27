@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            />
+
+        <TextView
+            android:id="@+id/tvChangeAvatar"
+            android:text="Change your avatar"
+            android:textSize="20dp"
+            android:textColor="#00f"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/ivAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etName"
+            android:hint="Type your name..."
+            android:inputType="text"
+            android:textSize="25dp"
+            android:layout_below="@+id/tvChangeAvatar"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etMaxVelocity"
+            android:textSize="25dp"
+            android:hint="Type your max velocity"
+            android:inputType="numberDecimal"
+            android:layout_below="@+id/etName"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content" />
+
+
+        <Switch
+            android:id="@+id/switchVerhicle"
+            android:layout_below="@+id/etMaxVelocity"
+            android:layout_centerHorizontal="true"
+            android:text="Driving mode: "
+            android:textSize="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOn="Car"
+            android:textOff="Bike"
+             />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
