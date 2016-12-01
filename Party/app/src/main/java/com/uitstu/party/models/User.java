@@ -41,4 +41,15 @@ public class User {
         return result;
     }
 
+    public User(){
+        UID = "";
+        curPartyID = "";
+        name = "";
+        latitude = 0.0;
+        longitude = 0.0;
+        maxVelocity = 0.0;
+        vehicle = "";
+        urlAvatar = "";
+    }
+
 }

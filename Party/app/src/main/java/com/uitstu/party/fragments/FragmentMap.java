@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.uitstu.party.R;
 import com.uitstu.party.dialogfragments.FragmentCreateParty;
 import com.uitstu.party.dialogfragments.FragmentJoinParty;
@@ -38,6 +40,7 @@ import com.uitstu.party.dialogfragments.FragmentOutParty;
 import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.presenter.interfaces.IUpdateMap;
+import com.uitstu.party.services.MyService;
 
 import java.util.ArrayList;
 
@@ -120,7 +123,15 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
 
 
         //
+        /*
+        try {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(MyService.lat, MyService.lng), 10);
+            googleMap.moveCamera(cameraUpdate);
+        }
+        catch (Exception e){
 
+        }
+        */
 
         return rootView;
     }
@@ -168,6 +179,10 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(MyService.lat, MyService.lng), 14);
+        googleMap.moveCamera(cameraUpdate);
+
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -198,7 +213,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
         ArrayList<MarkerOptions> markerOptionses = new ArrayList<MarkerOptions>();
 
         for (int i=0; i<users.size(); i++){
-
+            if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(users.get(i).UID))
+                continue;
             LatLng latLng = new LatLng(users.get(i).latitude, users.get(i).longitude);
 
             MarkerOptions markerOptions = new MarkerOptions();

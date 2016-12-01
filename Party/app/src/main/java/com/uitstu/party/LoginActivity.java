@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity implements ILogin{
             @Override
             public void onClick(View view) {
                 PartyFirebase.getInstant().signInWithEmailAndPassword(LoginActivity.this, edtID.getText().toString(), edtPassword.getText().toString());
+
+
             }
         });
     }

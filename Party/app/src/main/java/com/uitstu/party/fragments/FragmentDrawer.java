@@ -83,6 +83,10 @@ public class FragmentDrawer extends Fragment {
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
                 PartyFirebase.user = null;
+                PartyFirebase.getInstant().removeFirebaseListener();
+                //PartyFirebase.setNull();
+                //PartyFirebase.getInstant().setFirebaseListener();
+                //PartyFirebase.getInstant().addFirebaseListener();
                 Intent i = getActivity().getBaseContext().getPackageManager()
                         .getLaunchIntentForPackage( getActivity().getBaseContext().getPackageName() );
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -131,7 +135,10 @@ public class FragmentDrawer extends Fragment {
                 .into(ivDrawerAvatar);
 */
         //
-        Picasso.with(getActivity()).load(PartyFirebase.user.urlAvatar).into(ivDrawerAvatar);
+        if (PartyFirebase.user != null && PartyFirebase.user.urlAvatar != null) {
+            if (!PartyFirebase.user.urlAvatar.equals(""))
+                Picasso.with(getActivity()).load(PartyFirebase.user.urlAvatar).into(ivDrawerAvatar);
+        }
 
 
 

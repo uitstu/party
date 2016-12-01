@@ -46,6 +46,9 @@ public class PartyFirebase {
             partyFirebase = new PartyFirebase();
         return partyFirebase;
     }
+    public static void setNull(){
+        partyFirebase = null;
+    }
 
     public FirebaseAuth firebaseAuth;
     public FirebaseDatabase firebaseDatabase;
@@ -80,7 +83,7 @@ public class PartyFirebase {
     }
 
     //set listener
-    void setFirebaseListener(){
+    public void setFirebaseListener(){
 
         eventPartyMembers = new ChildEventListener() {
             @Override
@@ -146,10 +149,15 @@ public class PartyFirebase {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User usr = dataSnapshot.getValue(User.class);
+                    if (usr == null)
+                        usr = new User();
                     usr.UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    if (user == null)
-                        Log.i("huy11j","dung la moi vo null");
+                    if (usr == null)
+                        Log.i("huy11j1","dung la moi vo null22");
+                    if (FirebaseAuth.getInstance() == null)
+                        Log.i("huy11j1","dung la moi vo null11");
+                    Log.i("huy11j1","dung la moi vo null33");
 
                     if (user == null || user.curPartyID == null || user.curPartyID.equals("")){
                         user = new User();
@@ -243,7 +251,7 @@ public class PartyFirebase {
     }
 
     //add listener
-    void addFirebaseListener(){
+    public void addFirebaseListener(){
         if (firebaseAuth != null && firebaseAuthListener != null)
             firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
@@ -283,6 +291,11 @@ public class PartyFirebase {
                         String exString = "";
                         if (task.getException() != null)
                             exString += task.getException().toString();
+                        //
+                        removeFirebaseListener();
+                        setNull();
+                        getInstant();
+                        //
                         ((ILogin)activity).onLogin(exString);
                     }
                 });
@@ -396,6 +409,7 @@ public class PartyFirebase {
                 if (databaseError == null){
 
                     users.clear();
+                    FragmentMap.getInstant().updateMembers(users);
 
                     try {
                         partyMembers.removeEventListener(eventPartyMembers);
