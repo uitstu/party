@@ -23,6 +23,7 @@ import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.interfaces.ILogin;
 import com.uitstu.party.presenter.interfaces.IRegister;
 import com.uitstu.party.presenter.interfaces.IUpdateMap;
+import com.uitstu.party.supports.MemberAvatars;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -91,6 +92,13 @@ public class PartyFirebase {
                 User usr = dataSnapshot.getValue(User.class);
                 usr.UID = dataSnapshot.getKey();
 
+                try{
+                    MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar);
+                }
+                catch (Exception e){
+
+                }
+
                 users.add(usr);
 
                 if (map != null)
@@ -106,6 +114,21 @@ public class PartyFirebase {
 
                 for (int i=users.size()-1; i>=0; i--){
                     if (users.get(i).UID.equals(usr.UID)){
+                        try {
+                            if (users.get(i).urlAvatar.equals(usr.urlAvatar)) {
+                                try {
+                                    MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar);
+                                } catch (Exception e) {
+
+                                }
+
+                                users.add(usr);
+                            }
+                        }
+                        catch (Exception e){
+
+                        }
+
                         users.set(i, usr);
                     }
                 }
@@ -125,6 +148,14 @@ public class PartyFirebase {
                 for (int i=users.size()-1; i>=0; i--){
                     if (users.get(i).UID.equals(usr.UID)){
                         users.remove(i);
+
+                        try {
+                            MemberAvatars.getInstant().remove(usr.UID);
+                        } catch (Exception e) {
+
+                        }
+
+                        users.add(usr);
                     }
                 }
 

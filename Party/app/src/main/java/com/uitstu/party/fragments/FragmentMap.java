@@ -41,6 +41,7 @@ import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.presenter.interfaces.IUpdateMap;
 import com.uitstu.party.services.MyService;
+import com.uitstu.party.supports.MemberAvatars;
 
 import java.util.ArrayList;
 
@@ -220,7 +221,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
 
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(overlayMapIcon(null)));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(overlayMapIcon(MemberAvatars.getInstant().getBitmap(users.get(i).UID))));
 
             markerOptionses.add(markerOptions);
 
@@ -236,15 +237,18 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
 
     public Bitmap overlayMapIcon(Bitmap icon) {
         //style of marker
-        Bitmap styleMarker = BitmapFactory.decodeResource(getResources(),R.drawable.fat_blue_pin);
+        Bitmap styleMarker = BitmapFactory.decodeResource(getResources(),R.drawable.m_blue);
+        styleMarker = Bitmap.createScaledBitmap(styleMarker, 100,100,false);
         if (icon != null) {
             //overlay will combine between style and true icon
             Bitmap overlay = Bitmap.createBitmap(styleMarker.getWidth(), styleMarker.getHeight(), styleMarker.getConfig());
+            icon = Bitmap.createScaledBitmap(icon, 52,52,false);
             Canvas canvas = new Canvas(overlay);
-            canvas.drawBitmap(styleMarker, new Matrix(), null);
+            //canvas.drawBitmap(styleMarker, new Matrix(), null);
 
             //fit per pixel follow on TYPE
-            canvas.drawBitmap(icon, styleMarker.getWidth() / 5 - 4, styleMarker.getHeight() / 8, null);
+            canvas.drawBitmap(icon, 25/*styleMarker.getWidth()*/, 13/*styleMarker.getHeight()*/, null);
+            canvas.drawBitmap(styleMarker, new Matrix(), null);
             return overlay;
         } else
             return styleMarker;

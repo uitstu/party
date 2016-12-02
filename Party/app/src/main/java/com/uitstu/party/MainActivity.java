@@ -35,6 +35,7 @@ import com.uitstu.party.fragments.FragmentDrawer;
 import com.uitstu.party.fragments.FragmentMap;
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.services.MyService;
+import com.uitstu.party.supports.MemberAvatars;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MemberAvatars.getInstant(this);
 
         PartyFirebase.getInstant();
 
