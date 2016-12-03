@@ -40,6 +40,7 @@
         </RelativeLayout>
         <Button
             android:background="#ff0"
+            android:alpha="0.0"
             android:id="@+id/bt"
             android:layout_width="100dp"
             android:layout_height="100dp"

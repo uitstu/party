@@ -34,9 +34,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.uitstu.party.R;
+import com.uitstu.party.dialogfragments.FragmentAnchor;
 import com.uitstu.party.dialogfragments.FragmentCreateParty;
 import com.uitstu.party.dialogfragments.FragmentJoinParty;
 import com.uitstu.party.dialogfragments.FragmentOutParty;
+import com.uitstu.party.models.Anchor;
 import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.presenter.interfaces.IUpdateMap;
@@ -61,7 +63,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
     MapView mapView;
     SupportPlaceAutocompleteFragment edtCompletePlace;
 
-    FloatingActionButton fabCreate, fabJoin, fabOut;
+    FloatingActionButton fabAnchor, fabCreate, fabJoin, fabOut;
 
     @Nullable
     @Override
@@ -79,9 +81,18 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
         } catch (Exception e) {
         }
 
+        fabAnchor = (FloatingActionButton) rootView.findViewById(R.id.fabAnchor);
         fabCreate = (FloatingActionButton) rootView.findViewById(R.id.fabCreate);
         fabJoin = (FloatingActionButton) rootView.findViewById(R.id.fabJoin);
         fabOut = (FloatingActionButton) rootView.findViewById(R.id.fabOut);
+
+        fabAnchor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment dialog = new FragmentAnchor();
+                dialog.show(getChildFragmentManager(),"dropping");
+            }
+        });
 
         fabCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,6 +243,18 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             googleMap.addMarker(markerOptions);
         }
 
+        updateAnchor();
+
+    }
+
+    public void updateAnchor(){
+        if (PartyFirebase.anchor != null && (!PartyFirebase.anchor.latitude.equals(0.0) || !PartyFirebase.anchor.longitude.equals(0.0))){
+            MarkerOptions markerOptions = new MarkerOptions();
+            LatLng latLng = new LatLng(PartyFirebase.anchor.latitude, PartyFirebase.anchor.longitude);
+            markerOptions.position(latLng);
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.anchor));
+            googleMap.addMarker(markerOptions);
+        }
     }
 
     @Override

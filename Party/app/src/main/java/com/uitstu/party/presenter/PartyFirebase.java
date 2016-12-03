@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.uitstu.party.MainActivity;
 import com.uitstu.party.fragments.FragmentDrawer;
 import com.uitstu.party.fragments.FragmentMap;
+import com.uitstu.party.models.Anchor;
 import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.interfaces.ILogin;
 import com.uitstu.party.presenter.interfaces.IRegister;
@@ -69,6 +70,10 @@ public class PartyFirebase {
     public ChildEventListener eventPartyMembers;
     public static ArrayList<User> users;
 
+    public static DatabaseReference AnchorReference;
+    public static ValueEventListener eventAnchor;
+    public static Anchor anchor;
+
     //listener
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
@@ -90,6 +95,7 @@ public class PartyFirebase {
             eventPartyMembers = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Log.i("huy","huy load mem");
                     User usr = dataSnapshot.getValue(User.class);
                     usr.UID = dataSnapshot.getKey();
 
@@ -212,6 +218,23 @@ public class PartyFirebase {
                 }
             };
         }
+
+        if (eventAnchor == null){
+            eventAnchor = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    anchor = dataSnapshot.getValue(Anchor.class);
+                    if (anchor != null){
+                        FragmentMap.getInstant().updateMembers(users);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+        }
     }
 
     //add listener
@@ -230,6 +253,9 @@ public class PartyFirebase {
 
         if (partyMembers != null && eventPartyMembers != null)
             partyMembers.removeEventListener(eventPartyMembers);
+
+        if (AnchorReference != null && eventAnchor != null)
+            AnchorReference.removeEventListener(eventAnchor);
     }
 
     public void createUserWithEmailAndPassword(IRegister activity, String email, String password){
@@ -351,6 +377,15 @@ public class PartyFirebase {
                     });
 
                     partyMembers.addChildEventListener(eventPartyMembers);
+
+                    try{
+                        AnchorReference.removeEventListener(eventAnchor);
+                    }
+                    catch (Exception e){
+
+                    }
+                    AnchorReference = firebaseDatabase.getReference().child("anchor").child(user.curPartyID);
+                    AnchorReference.addValueEventListener(eventAnchor);
                 }
                 else {
 

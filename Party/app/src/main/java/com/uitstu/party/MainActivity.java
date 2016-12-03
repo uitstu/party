@@ -174,6 +174,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        viewPager.setOffscreenPageLimit(2);
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
