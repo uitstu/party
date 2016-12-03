@@ -1,5 +1,6 @@
 package com.uitstu.party;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -13,12 +14,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +37,7 @@ import com.uitstu.party.fragments.FragmentAdvertising;
 import com.uitstu.party.fragments.FragmentChatting;
 import com.uitstu.party.fragments.FragmentDrawer;
 import com.uitstu.party.fragments.FragmentMap;
+import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.services.MyService;
 import com.uitstu.party.supports.MemberAvatars;
@@ -53,14 +58,30 @@ public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawer;
 
+    private static MainActivity mainActivity;
+
+    public static MainActivity getInstant(){
+        return mainActivity;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MemberAvatars.getInstant(this);
+        mainActivity = this;
 
-        PartyFirebase.getInstant();
+        MemberAvatars.getInstant(getBaseContext());
+
+        //MemberAvatars.getInstant(this);
+
+        //
+        //
+        PartyFirebase.getInstant().setFirebaseListener();
+        PartyFirebase.getInstant().addFirebaseListener();
+        if (PartyFirebase.user != null && PartyFirebase.user.curPartyID != null && !PartyFirebase.user.curPartyID.equals("")){
+            PartyFirebase.getInstant().joinParty(PartyFirebase.user.curPartyID);
+        }
 
         setResult(LoginActivity.RESULT_NORMAL);
 
@@ -83,6 +104,42 @@ public class MainActivity extends AppCompatActivity {
         MyService.activity = this;
         Intent in = new Intent(MainActivity.this, MyService.class);
         startService(in);
+/*
+        for (int i=0; i<PartyFirebase.users.size(); i++){
+            MemberAvatars.getInstant().putToList(PartyFirebase.users.get(i).UID,PartyFirebase.users.get(i).urlAvatar,MainActivity.this);
+        }
+        Log.i("huyloadhinh","huyloadhinh so luong: "+PartyFirebase.users.size());
+        */
+        ((Button) findViewById(R.id.bt)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //updateMembers();
+                FragmentMap.getInstant().updateMembers(PartyFirebase.users);
+            }
+        });
+    }
+
+    public void updateMembers(){
+        try {
+            for (int i = 0; i < PartyFirebase.users.size(); i++) {
+                MemberAvatars.getInstant().putToList(PartyFirebase.users.get(i).UID, PartyFirebase.users.get(i).urlAvatar, MainActivity.this);
+            }
+        }
+        catch (Exception e){
+
+        }
+        Log.i("huyload","huyload mainactivity size"+ PartyFirebase.users.size());
+        FragmentMap.getInstant().updateMembers(PartyFirebase.users);
+    }
+
+    public void loadBitmap(User usr){
+        try{
+            MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar, MainActivity.this);
+        }
+        catch (Exception e){
+
+        }
+
     }
 
     void mapViews(){
@@ -161,6 +218,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //PartyFirebase.user = null;
     }
 }

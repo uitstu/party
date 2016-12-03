@@ -84,9 +84,11 @@ public class FragmentDrawer extends Fragment {
                 FirebaseAuth.getInstance().signOut();
                 PartyFirebase.user = null;
                 PartyFirebase.getInstant().removeFirebaseListener();
-                //PartyFirebase.setNull();
-                //PartyFirebase.getInstant().setFirebaseListener();
-                //PartyFirebase.getInstant().addFirebaseListener();
+/*
+                PartyFirebase.setNull();
+                PartyFirebase.getInstant().setFirebaseListener();
+                PartyFirebase.getInstant().addFirebaseListener();
+*/
                 Intent i = getActivity().getBaseContext().getPackageManager()
                         .getLaunchIntentForPackage( getActivity().getBaseContext().getPackageName() );
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

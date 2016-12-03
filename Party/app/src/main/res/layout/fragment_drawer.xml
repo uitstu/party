@@ -38,26 +38,20 @@
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true">
 
-        <FrameLayout
-            android:id="@+id/flSub"
+        <ImageView
+            android:id="@+id/ivDrawerAvatar"
+            android:layout_gravity="center"
             android:layout_centerHorizontal="true"
-            android:background="#000"
-            android:layout_width="match_parent"
-            android:layout_height="320dp">
-            <ImageView
-                android:layout_gravity="center"
-                android:id="@+id/ivDrawerAvatar"
-                android:layout_centerHorizontal="true"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                />
-        </FrameLayout>
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:background="@drawable/custom_circle_views"
+            />
 
         <TextView
             android:id="@+id/tvDrawerName"
             android:text="\nYour name: Waiting"
             android:textSize="25dp"
-            android:layout_below="@+id/flSub"
+            android:layout_below="@+id/ivDrawerAvatar"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:layout_width="wrap_content"

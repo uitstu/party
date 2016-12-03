@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.presenter.interfaces.ILogin;
+import com.uitstu.party.supports.MemberAvatars;
 
 public class LoginActivity extends AppCompatActivity implements ILogin{
 
@@ -25,10 +26,15 @@ public class LoginActivity extends AppCompatActivity implements ILogin{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //MemberAvatars.getInstant(getBaseContext());
+
         mapViews();
         setEvents();
 
         if (PartyFirebase.getInstant().firebaseAuth.getCurrentUser() != null) {
+            //
+            PartyFirebase.getInstant().removeFirebaseListener();
+            //
             Intent in = new Intent(getApplicationContext(), MainActivity.class);
             startActivityForResult(in, LOGIN);
         }
@@ -70,5 +76,15 @@ public class LoginActivity extends AppCompatActivity implements ILogin{
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        /*
+        PartyFirebase.user = null;
+        PartyFirebase.getInstant().removeFirebaseListener();
+        PartyFirebase.setNull();
+        */
     }
 }

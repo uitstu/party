@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.uitstu.party.MainActivity;
 import com.uitstu.party.fragments.FragmentDrawer;
 import com.uitstu.party.fragments.FragmentMap;
 import com.uitstu.party.models.User;
@@ -85,95 +86,101 @@ public class PartyFirebase {
 
     //set listener
     public void setFirebaseListener(){
+        if (eventPartyMembers == null) {
+            eventPartyMembers = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    User usr = dataSnapshot.getValue(User.class);
+                    usr.UID = dataSnapshot.getKey();
 
-        eventPartyMembers = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User usr = dataSnapshot.getValue(User.class);
-                usr.UID = dataSnapshot.getKey();
+                    users.add(usr);
 
-                try{
-                    MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar);
+                    if (map != null)
+                        map.updateMembers(users);
+                    //
+                    // aa MainActivity.getInstant().updateMembers();
+                    //
+
+                    try {
+                        //MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar);
+                        MainActivity.getInstant().loadBitmap(usr);
+                        // aa Log.i("huyload","huyload goi adding"+usr.UID+" ---- "+usr.urlAvatar);
+                    } catch (Exception e) {
+
+                    }
+
+                    //MainActivity.getInstant().updateMembers();
+                    //MainActivity.getInstant().loadBitmap(usr);
                 }
-                catch (Exception e){
 
-                }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    User usr = dataSnapshot.getValue(User.class);
+                    usr.UID = dataSnapshot.getKey();
 
-                users.add(usr);
-
-                if (map != null)
-                    map.updateMembers(users);
-
-                Log.i("huy11","huy11");
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                User usr = dataSnapshot.getValue(User.class);
-                usr.UID = dataSnapshot.getKey();
-
-                for (int i=users.size()-1; i>=0; i--){
-                    if (users.get(i).UID.equals(usr.UID)){
-                        try {
-                            if (users.get(i).urlAvatar.equals(usr.urlAvatar)) {
-                                try {
-                                    MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar);
-                                } catch (Exception e) {
-
+                    for (int i = users.size() - 1; i >= 0; i--) {
+                        if (users.get(i).UID.equals(usr.UID)) {
+                            try {
+                                if (users.get(i).urlAvatar.equals(usr.urlAvatar)) {
+                                    users.add(usr);
                                 }
+                            } catch (Exception e) {
 
-                                users.add(usr);
                             }
-                        }
-                        catch (Exception e){
 
+                            users.set(i, usr);
                         }
-
-                        users.set(i, usr);
                     }
+
+                    if (map != null) {
+                        map.updateMembers(users);
+
+                    }
+
+                    try {
+                        // aa MainActivity.getInstant().loadBitmap(usr);
+                        //MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar);
+                    } catch (Exception e) {
+
+                    }
+
+                    //MainActivity.getInstant().updateMembers();
+                    //MainActivity.getInstant().loadBitmap(usr);
                 }
 
-                if (map != null) {
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    User usr = dataSnapshot.getValue(User.class);
+                    usr.UID = dataSnapshot.getKey();
+
+                    for (int i = users.size() - 1; i >= 0; i--) {
+                        if (users.get(i).UID.equals(usr.UID)) {
+                            users.remove(i);
+
+                            try {
+                                MemberAvatars.getInstant().remove(usr.UID);
+                            } catch (Exception e) {
+
+                            }
+
+                            users.add(usr);
+                        }
+                    }
+
                     map.updateMembers(users);
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                User usr = dataSnapshot.getValue(User.class);
-                usr.UID = dataSnapshot.getKey();
-
-                for (int i=users.size()-1; i>=0; i--){
-                    if (users.get(i).UID.equals(usr.UID)){
-                        users.remove(i);
-
-                        try {
-                            MemberAvatars.getInstant().remove(usr.UID);
-                        } catch (Exception e) {
-
-                        }
-
-                        users.add(usr);
-                    }
                 }
-
-                map.updateMembers(users);
-
-                Log.i("huy13","huy13");
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
+            };
+        }
 
         if (eventUserInfo == null){
             eventUserInfo = new ValueEventListener() {
@@ -183,12 +190,6 @@ public class PartyFirebase {
                     if (usr == null)
                         usr = new User();
                     usr.UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                    if (usr == null)
-                        Log.i("huy11j1","dung la moi vo null22");
-                    if (FirebaseAuth.getInstance() == null)
-                        Log.i("huy11j1","dung la moi vo null11");
-                    Log.i("huy11j1","dung la moi vo null33");
 
                     if (user == null || user.curPartyID == null || user.curPartyID.equals("")){
                         user = new User();
@@ -201,62 +202,11 @@ public class PartyFirebase {
                         user.UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         if (usr != null && !usr.curPartyID.equals("")){
                             joinParty(usr.curPartyID);
-                            Log.i("huy11j","huy11j");
                         }
                     }
                     else if (user != null && user.curPartyID != null && !user.curPartyID.equals("") && !user.curPartyID.equals(usr.curPartyID)) {
                         joinParty(usr.curPartyID);
-                        Log.i("huy11j","huy11j");
                     }
-
-/*
-                    if (usr != null) {
-
-                        usr.UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                        if (user == null) {
-
-                            //if (usr.curPartyID != null){
-                            //    joinParty(usr.curPartyID);
-                            //}
-
-                            user = new User();
-                            user.UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            joinParty(usr.curPartyID);
-                        }
-                        else{
-                            if (usr.curPartyID!=null && !usr.curPartyID.equals("") && (!usr.curPartyID.equals(user.curPartyID) ))
-                                joinParty(usr.curPartyID);
-                        }
-
-                        //user = usr;
-
-
-                        //if (usr.curPartyID!=null && !usr.curPartyID.equals("") && (!usr.curPartyID.equals(user.curPartyID) ))
-                            //joinParty(usr.curPartyID);
-
-
-                        if (usr.curPartyID!=null && usr.curPartyID.equals(""))
-                            FragmentMap.getInstant().updateFabs(false);
-                        else
-                            FragmentMap.getInstant().updateFabs(true);
-
-
-                    }
-                    else {
-                        usr = new User();
-                        usr.UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    }
-
-                    user = usr;
-*/
-
-/*
-                    if (!usr.curPartyID.equals("") &&  !usr.curPartyID.equals(PARTY_ID)){
-                        PARTY_ID = usr.curPartyID;
-                        joinParty(usr.curPartyID);
-                    }
-*/
 
                 }
 
@@ -323,9 +273,11 @@ public class PartyFirebase {
                         if (task.getException() != null)
                             exString += task.getException().toString();
                         //
+                        /*
                         removeFirebaseListener();
                         setNull();
                         getInstant();
+                        */
                         //
                         ((ILogin)activity).onLogin(exString);
                     }
@@ -375,7 +327,6 @@ public class PartyFirebase {
     }
 
     public void joinParty(final String partyID){
-        Log.i("huy11j","huy11j ----- do no ko goi");
         String strCurParty = "";
         if (user.curPartyID != null)
             strCurParty = new String(user.curPartyID);
@@ -403,7 +354,6 @@ public class PartyFirebase {
 
                     }
 
-                    //partyMembers = firebaseDatabase.getReference().child("parties").child(partyID).child("members");
                     partyMembers = firebaseDatabase.getReference().child("parties").child(partyID).child("members");
                     partyMembers.addChildEventListener(eventPartyMembers);
                     Log.i("huy11j","huy11j ---- da add event");
@@ -448,19 +398,12 @@ public class PartyFirebase {
                     catch (Exception e){
 
                     }
-
-                    //partyMembers = firebaseDatabase.getReference().child("parties").child(partyID).child("members");
-                    //partyMembers.addChildEventListener(eventPartyMembers);
                 }
             }
         });
     }
 
     public boolean updateUserDataToFirebase(){
-/*
-        firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(PartyFirebase.user);
-        firebaseDatabase.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(PartyFirebase.user);
-*/
         Map<String, Object> postValues = user.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
