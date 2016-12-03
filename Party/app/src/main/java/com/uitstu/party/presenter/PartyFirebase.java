@@ -21,6 +21,7 @@ import com.uitstu.party.MainActivity;
 import com.uitstu.party.fragments.FragmentDrawer;
 import com.uitstu.party.fragments.FragmentMap;
 import com.uitstu.party.models.Anchor;
+import com.uitstu.party.models.Tracking;
 import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.interfaces.ILogin;
 import com.uitstu.party.presenter.interfaces.IRegister;
@@ -99,6 +100,11 @@ public class PartyFirebase {
                     User usr = dataSnapshot.getValue(User.class);
                     usr.UID = dataSnapshot.getKey();
 
+                    if (Tracking.getInstant().type == Tracking.MEMBER){
+                        if (Tracking.getInstant().user != null && Tracking.getInstant().user.UID.equals(usr.UID))
+                            Tracking.getInstant().setLatLng(usr.latitude, usr.longitude);
+                    }
+
                     users.add(usr);
 
                     if (map != null)
@@ -116,11 +122,28 @@ public class PartyFirebase {
                     User usr = dataSnapshot.getValue(User.class);
                     usr.UID = dataSnapshot.getKey();
 
+                    if (usr.UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                        return;
+
+                    if (usr.UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                        return;
+
+                    if (Tracking.getInstant().user != null){
+                        Log.i("huycuoi","huycuoi: thay roi chua???"+Tracking.getInstant().user.UID+" ---- "+usr.UID);
+                    }
+                    if (Tracking.getInstant().type == Tracking.MEMBER){
+                        if (Tracking.getInstant().user != null && Tracking.getInstant().user.UID.equals(usr.UID)) {
+                            Tracking.getInstant().setLatLng(usr.latitude, usr.longitude);
+                            Tracking.getInstant().user = usr;
+                            Log.i("huycuoi","huycuoi: thay roi");
+                        }
+                    }
+
                     for (int i = users.size() - 1; i >= 0; i--) {
                         if (users.get(i).UID.equals(usr.UID)) {
                             try {
                                 if (users.get(i).urlAvatar.equals(usr.urlAvatar)) {
-                                    users.add(usr);
+                                    // aa users.add(usr);
                                 }
                             } catch (Exception e) {
 
@@ -140,6 +163,14 @@ public class PartyFirebase {
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     User usr = dataSnapshot.getValue(User.class);
                     usr.UID = dataSnapshot.getKey();
+
+                    if (usr.UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                        return;
+
+                    if (Tracking.getInstant().type == Tracking.MEMBER){
+                        if (Tracking.getInstant().user != null && Tracking.getInstant().user.UID.equals(usr.UID))
+                            Tracking.getInstant().user = null;
+                    }
 
                     for (int i = users.size() - 1; i >= 0; i--) {
                         if (users.get(i).UID.equals(usr.UID)) {
@@ -225,7 +256,13 @@ public class PartyFirebase {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     anchor = dataSnapshot.getValue(Anchor.class);
                     if (anchor != null){
+                        Log.i("huycuoi","huycuoi: "+Tracking.getInstant().type+" --- "+Tracking.ANCHOR);
+                        if (Tracking.getInstant().type == Tracking.ANCHOR){
+                            Tracking.getInstant().setLatLng(anchor.latitude, anchor.longitude);
+                        }
+
                         FragmentMap.getInstant().updateMembers(users);
+
                     }
                 }
 

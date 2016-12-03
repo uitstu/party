@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.vision.face.Landmark;
 import com.google.firebase.auth.FirebaseAuth;
 import com.uitstu.party.R;
 import com.uitstu.party.dialogfragments.FragmentAnchor;
@@ -39,10 +43,12 @@ import com.uitstu.party.dialogfragments.FragmentCreateParty;
 import com.uitstu.party.dialogfragments.FragmentJoinParty;
 import com.uitstu.party.dialogfragments.FragmentOutParty;
 import com.uitstu.party.models.Anchor;
+import com.uitstu.party.models.Tracking;
 import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.presenter.interfaces.IUpdateMap;
 import com.uitstu.party.services.MyService;
+import com.uitstu.party.supports.GetDirection;
 import com.uitstu.party.supports.MemberAvatars;
 
 import java.util.ArrayList;
@@ -64,6 +70,11 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
     SupportPlaceAutocompleteFragment edtCompletePlace;
 
     FloatingActionButton fabAnchor, fabCreate, fabJoin, fabOut;
+
+    public static MarkerOptions placeFounded;
+
+    private Polyline line;
+    GetDirection direction;
 
     @Nullable
     @Override
@@ -123,7 +134,24 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
         edtCompletePlace.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                if (googleMap != null) {
+                    //googleMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                    placeFounded = new MarkerOptions();
+                    LatLng latLng = place.getLatLng();
+                    placeFounded.position(latLng);
+                    placeFounded.icon(BitmapDescriptorFactory.fromResource(R.drawable.find));
+                    //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.anchor));
+
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+
+                    //
+                    if (Tracking.getInstant().type == Tracking.PLACE){
+                        Tracking.getInstant().setLatLng(placeFounded.getPosition().latitude, placeFounded.getPosition().longitude);
+
+                    }
+                    //
+                    updateMembers(PartyFirebase.users);
+                }
 
             }
 
@@ -191,6 +219,49 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        //
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Tracking.getInstant().setIsTracking(false);
+                placeFounded = null;
+                updateMembers(PartyFirebase.users);
+            }
+        });
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Double lat = marker.getPosition().latitude;
+                Double lng = marker.getPosition().longitude;
+
+                if ((lat - PartyFirebase.anchor.latitude<0.000000000001) && (lng - PartyFirebase.anchor.longitude<0.000000000001)){
+                    Log.i("huycuoi","huycuoi: true1"+lat+" ---- "+PartyFirebase.anchor.latitude+" ---- "+lng+" ---- "+PartyFirebase.anchor.longitude);
+                    Tracking.getInstant().setType(Tracking.ANCHOR);
+                }
+                else
+                if (placeFounded != null && ((lat - placeFounded.getPosition().latitude<0.000000000001) && (lng - placeFounded.getPosition().longitude<0.000000000001))){
+                    Log.i("huycuoi","huycuoi: placeFounder dc chon");
+                    Tracking.getInstant().setType(Tracking.PLACE);
+                }
+                else{
+                    Tracking.getInstant().setType(Tracking.MEMBER);
+                    for (int i=0; i<PartyFirebase.users.size(); i++){
+                        Log.i("huycuoi","huycuoi: xo thu"+PartyFirebase.users.get(i).UID);
+                        if ((lat - PartyFirebase.users.get(i).latitude<0.000000000001) && (lng - PartyFirebase.users.get(i).longitude<0.000000000001)){
+                            Tracking.user = PartyFirebase.users.get(i);
+                            Log.i("huycuoi","huycuoi: UID"+Tracking.user.UID);
+                            break;
+                        }
+                    }
+                }
+                Tracking.getInstant().setLatLng(lat,lng);
+                Tracking.getInstant().setIsTracking(true);
+                updateMembers(PartyFirebase.users);
+                return false;
+            }
+        });
+        //
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(MyService.lat, MyService.lng), 14);
         googleMap.moveCamera(cameraUpdate);
@@ -244,7 +315,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
         }
 
         updateAnchor();
-
+        updatePlaceFounded();
+        updatePath();
     }
 
     public void updateAnchor(){
@@ -257,9 +329,35 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
         }
     }
 
+    public void updatePlaceFounded(){
+        if (placeFounded != null){
+            googleMap.addMarker(placeFounded);
+        }
+    }
+
+    public void updatePath(){
+        if (Tracking.getInstant().isTracking){
+            //ve duong
+            try {
+                if(line != null)
+                    line.remove();
+                if(direction != null)
+                    direction.removeLine();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            LatLng place1 = new LatLng(MyService.lat, MyService.lng);
+            LatLng place2 = new LatLng(Tracking.getInstant().latitude, Tracking.getInstant().longitude);
+
+            direction = new GetDirection(googleMap, getActivity(), place1, place2);
+        }
+    }
+
     @Override
     public void updatePath(ArrayList<LatLng> path) {
-        Toast.makeText(getActivity(),"hi", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(),"hi", Toast.LENGTH_SHORT).show();
     }
 
     public Bitmap overlayMapIcon(Bitmap icon, boolean isOnline) {
