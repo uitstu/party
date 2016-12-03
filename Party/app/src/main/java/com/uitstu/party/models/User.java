@@ -23,6 +23,7 @@ public class User {
     public Double maxVelocity;
     public String vehicle;
     public String urlAvatar;
+    public String status;
 
     //public Bitmap avatar;
 
@@ -37,6 +38,7 @@ public class User {
         result.put("maxVelocity", maxVelocity);
         result.put("vehicle", vehicle);
         result.put("urlAvatar", urlAvatar);
+        result.put("status", status);
 
         return result;
     }

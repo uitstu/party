@@ -208,7 +208,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
 
     @Override
     public void updateMembers(ArrayList<User> users) {
-        //Toast.makeText(getActivity(),"hia: "+users.get(0).latitude, Toast.LENGTH_SHORT).show();
         googleMap.clear();
 
         ArrayList<MarkerOptions> markerOptionses = new ArrayList<MarkerOptions>();
@@ -221,7 +220,12 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
 
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(overlayMapIcon(MemberAvatars.getInstant().getBitmap(users.get(i).UID))));
+            if (users.get(i).status != null && users.get(i).equals("online")) {
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(overlayMapIcon(MemberAvatars.getInstant().getBitmap(users.get(i).UID),true)));
+            }
+            else{
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(overlayMapIcon(MemberAvatars.getInstant().getBitmap(users.get(i).UID),false)));
+            }
 
             markerOptionses.add(markerOptions);
 
@@ -235,9 +239,15 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
         Toast.makeText(getActivity(),"hi", Toast.LENGTH_SHORT).show();
     }
 
-    public Bitmap overlayMapIcon(Bitmap icon) {
+    public Bitmap overlayMapIcon(Bitmap icon, boolean isOnline) {
         //style of marker
-        Bitmap styleMarker = BitmapFactory.decodeResource(getResources(),R.drawable.m_blue);
+        Bitmap styleMarker;
+        if (isOnline){
+            styleMarker = BitmapFactory.decodeResource(getResources(),R.drawable.m_blue);
+        }
+        else{
+            styleMarker = BitmapFactory.decodeResource(getResources(),R.drawable.m_red);
+        }
         styleMarker = Bitmap.createScaledBitmap(styleMarker, 100,100,false);
         if (icon != null) {
             //overlay will combine between style and true icon

@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawer;
 
+    public static boolean isOnline = false;
+
     private static MainActivity mainActivity;
 
     public static MainActivity getInstant(){
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mainActivity = this;
+
+        isOnline = true;
 
         MemberAvatars.getInstant(getBaseContext());
 
@@ -218,5 +222,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isOnline = false;
     }
 }

@@ -19,6 +19,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.uitstu.party.MainActivity;
 import com.uitstu.party.fragments.FragmentDrawer;
 import com.uitstu.party.presenter.PartyFirebase;
 
@@ -147,6 +148,14 @@ public class MyService extends Service {
         @Override
         public void onLocationChanged(Location location)
         {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                PartyFirebase.getInstant().updateOnlineStatus();
+            /*
+            if (MainActivity.isOnline){
+                PartyFirebase.getInstant().updateOnlineStatus();
+            }
+            */
+
             if (PartyFirebase.user != null && FirebaseAuth.getInstance().getCurrentUser() != null){
                 PartyFirebase.user.latitude = location.getLatitude();
                 PartyFirebase.user.longitude = location.getLongitude();

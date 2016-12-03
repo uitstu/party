@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -81,14 +82,14 @@ public class FragmentDrawer extends Fragment {
         tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (user != null && user.curPartyID != null) {
+                    PartyFirebase.getInstant().firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("status").setValue("offline");
+                }
+
                 FirebaseAuth.getInstance().signOut();
                 PartyFirebase.user = null;
                 PartyFirebase.getInstant().removeFirebaseListener();
-/*
-                PartyFirebase.setNull();
-                PartyFirebase.getInstant().setFirebaseListener();
-                PartyFirebase.getInstant().addFirebaseListener();
-*/
+
                 Intent i = getActivity().getBaseContext().getPackageManager()
                         .getLaunchIntentForPackage( getActivity().getBaseContext().getPackageName() );
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

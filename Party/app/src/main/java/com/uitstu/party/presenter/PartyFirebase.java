@@ -97,20 +97,12 @@ public class PartyFirebase {
 
                     if (map != null)
                         map.updateMembers(users);
-                    //
-                    // aa MainActivity.getInstant().updateMembers();
-                    //
 
                     try {
-                        //MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar);
                         MainActivity.getInstant().loadBitmap(usr);
-                        // aa Log.i("huyload","huyload goi adding"+usr.UID+" ---- "+usr.urlAvatar);
                     } catch (Exception e) {
 
                     }
-
-                    //MainActivity.getInstant().updateMembers();
-                    //MainActivity.getInstant().loadBitmap(usr);
                 }
 
                 @Override
@@ -136,16 +128,6 @@ public class PartyFirebase {
                         map.updateMembers(users);
 
                     }
-
-                    try {
-                        // aa MainActivity.getInstant().loadBitmap(usr);
-                        //MemberAvatars.getInstant().putToList(usr.UID, usr.urlAvatar);
-                    } catch (Exception e) {
-
-                    }
-
-                    //MainActivity.getInstant().updateMembers();
-                    //MainActivity.getInstant().loadBitmap(usr);
                 }
 
                 @Override
@@ -199,6 +181,7 @@ public class PartyFirebase {
                         user.maxVelocity = usr.maxVelocity;
                         user.urlAvatar = usr.urlAvatar;
                         user.name = usr.name;
+                        user.status = usr.status;
                         user.UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         if (usr != null && !usr.curPartyID.equals("")){
                             joinParty(usr.curPartyID);
@@ -272,13 +255,7 @@ public class PartyFirebase {
                         String exString = "";
                         if (task.getException() != null)
                             exString += task.getException().toString();
-                        //
-                        /*
-                        removeFirebaseListener();
-                        setNull();
-                        getInstant();
-                        */
-                        //
+
                         ((ILogin)activity).onLogin(exString);
                     }
                 });
@@ -355,17 +332,58 @@ public class PartyFirebase {
                     }
 
                     partyMembers = firebaseDatabase.getReference().child("parties").child(partyID).child("members");
+
+                    DatabaseReference statusOnOff = firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    statusOnOff.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User usr = dataSnapshot.getValue(User.class);
+                            DatabaseReference statusOO = firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            if (usr != null){
+                                statusOO.child("status").setValue("online");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                     partyMembers.addChildEventListener(eventPartyMembers);
-                    Log.i("huy11j","huy11j ---- da add event");
-                    if (eventPartyMembers == null)
-                        Log.i("huy11j","huy11j ---- nhung rat tiec null");
                 }
                 else {
-                    Log.i("huy11j","huy11j ---- ko thanh cong");
+
                 }
             }
         });
 
+    }
+
+    public void updateOnlineStatus(){
+
+        if (user != null && user.curPartyID != null && !user.curPartyID.equals("")){
+            DatabaseReference statusOnOff = firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            statusOnOff.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User usr = dataSnapshot.getValue(User.class);
+                    DatabaseReference statusOO = firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("status");
+                    if (usr != null){
+                        statusOO.onDisconnect().setValue("offline");
+                        statusOO.setValue("online");
+                    }
+                    else{
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     public void outParty(){

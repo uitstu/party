@@ -45,6 +45,16 @@
         >
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAnchor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            sothree:fab_size="mini"
+            sothree:fab_icon="@drawable/tab_map"
+            sothree:fab_colorNormal="#0f0"
+            sothree:fab_colorPressed="#ff0"
+            />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabCreate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
