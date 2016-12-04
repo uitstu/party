@@ -3,6 +3,7 @@ package com.uitstu.party.presenter;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -228,6 +229,11 @@ public class PartyFirebase {
                         joinParty(usr.curPartyID);
                     }
 
+                    if (usr != null && usr.curPartyID != null && !usr.curPartyID.equals("")){
+                        FragmentMap.getInstant().layoutShareParty.setVisibility(View.VISIBLE);
+                        FragmentMap.getInstant().updatePartyCode(usr.curPartyID);
+                    }
+
                 }
 
                 @Override
@@ -272,6 +278,22 @@ public class PartyFirebase {
                 }
             };
         }
+
+        if (eventPartyName == null){
+            eventPartyName = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String partyName = dataSnapshot.getValue(String.class);
+                    FragmentMap.getInstant().layoutShareParty.setVisibility(View.VISIBLE);
+                    FragmentMap.getInstant().updatePartyName(partyName);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+        }
     }
 
     //add listener
@@ -293,6 +315,10 @@ public class PartyFirebase {
 
         if (AnchorReference != null && eventAnchor != null)
             AnchorReference.removeEventListener(eventAnchor);
+
+        if (partyName != null && eventPartyName!= null){
+            partyName.removeEventListener(eventPartyName);
+        }
     }
 
     public void createUserWithEmailAndPassword(IRegister activity, String email, String password){
@@ -341,6 +367,10 @@ public class PartyFirebase {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null){
+                    //
+                    anchor = null;
+                    FragmentMap.getInstant().updateMembers(users);
+                    //
 
                     users.clear();
 
@@ -367,68 +397,101 @@ public class PartyFirebase {
     }
 
     public void joinParty(final String partyID){
-        String strCurParty = "";
-        if (user.curPartyID != null)
-            strCurParty = new String(user.curPartyID);
-
-        user.curPartyID = partyID;
-
-        Map<String, Object> postValues = user.toMap();
-        Map<String, Object> childUpdates = new HashMap<>();
-
-        childUpdates.put("users/"+user.UID,postValues);
-        if (!strCurParty.equals(""))
-            childUpdates.put("parties/"+strCurParty+"/members/"+user.UID,null);
-        childUpdates.put("parties/"+partyID+"/members/"+user.UID,postValues);
-        firebaseDatabase.getReference().updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
+        firebaseDatabase.getReference().child("parties").child(partyID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null){
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    String strCurParty = "";
+                    if (user.curPartyID != null)
+                        strCurParty = new String(user.curPartyID);
+                    //
+                    anchor = null;
+                    FragmentMap.getInstant().updateMembers(users);
+                    //
+                    user.curPartyID = partyID;
 
-                    users.clear();
+                    Map<String, Object> postValues = user.toMap();
+                    Map<String, Object> childUpdates = new HashMap<>();
 
-                    try {
-                        partyMembers.removeEventListener(eventPartyMembers);
-                    }
-                    catch (Exception e){
-
-                    }
-
-                    partyMembers = firebaseDatabase.getReference().child("parties").child(partyID).child("members");
-
-                    DatabaseReference statusOnOff = firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                    statusOnOff.addListenerForSingleValueEvent(new ValueEventListener() {
+                    childUpdates.put("users/"+user.UID,postValues);
+                    if (!strCurParty.equals(""))
+                        childUpdates.put("parties/"+strCurParty+"/members/"+user.UID,null);
+                    childUpdates.put("parties/"+partyID+"/members/"+user.UID,postValues);
+                    firebaseDatabase.getReference().updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User usr = dataSnapshot.getValue(User.class);
-                            DatabaseReference statusOO = firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            if (usr != null){
-                                statusOO.child("status").setValue("online");
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError == null){
+
+                                FragmentMap.getInstant().updateFabs(true);
+
+                                users.clear();
+
+                                try {
+                                    partyMembers.removeEventListener(eventPartyMembers);
+                                }
+                                catch (Exception e){
+
+                                }
+
+                                partyMembers = firebaseDatabase.getReference().child("parties").child(partyID).child("members");
+
+                                DatabaseReference statusOnOff = firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                statusOnOff.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        User usr = dataSnapshot.getValue(User.class);
+                                        DatabaseReference statusOO = firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                        if (usr != null){
+                                            statusOO.child("status").setValue("online");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                partyMembers.addChildEventListener(eventPartyMembers);
+
+                                try{
+                                    AnchorReference.removeEventListener(eventAnchor);
+                                }
+                                catch (Exception e){
+
+                                }
+                                AnchorReference = firebaseDatabase.getReference().child("anchor").child(user.curPartyID);
+                                AnchorReference.addValueEventListener(eventAnchor);
+
+                                //
+
+                                try {
+                                    partyName.removeEventListener(eventPartyName);
+                                }
+                                catch (Exception e){
+
+                                }
+                                partyName = firebaseDatabase.getReference().child("parties").child(partyID).child("name");
+                                partyName.addValueEventListener(eventPartyName);
+                            }
+                            else {
+
                             }
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
                     });
-
-                    partyMembers.addChildEventListener(eventPartyMembers);
-
-                    try{
-                        AnchorReference.removeEventListener(eventAnchor);
-                    }
-                    catch (Exception e){
-
-                    }
-                    AnchorReference = firebaseDatabase.getReference().child("anchor").child(user.curPartyID);
-                    AnchorReference.addValueEventListener(eventAnchor);
                 }
-                else {
-
+                else{
+                    MainActivity.getInstant().showToast("No party with this CODE...");
                 }
             }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
+
+
 
     }
 
@@ -482,12 +545,19 @@ public class PartyFirebase {
                     users.clear();
                     FragmentMap.getInstant().updateMembers(users);
 
+                    FragmentMap.getInstant().updateFabs(false);
+
                     try {
                         partyMembers.removeEventListener(eventPartyMembers);
                     }
                     catch (Exception e){
 
                     }
+
+                    FragmentMap.getInstant().setPartyInfoInVisible();
+
+                    anchor = null;
+                    FragmentMap.getInstant().updateMembers(users);
                 }
             }
         });

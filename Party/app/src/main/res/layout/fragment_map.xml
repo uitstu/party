@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
-    android:background="#f00"
+    android:background="#fff"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.uitstu.party.MainActivity">
@@ -31,6 +31,53 @@
             />
     </FrameLayout>
 
+    <LinearLayout
+        android:id="@+id/layoutShareParty"
+        android:layout_marginTop="100dp"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        >
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:id="@+id/tvPartyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TableRow
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:text="CODE: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/tvPartyCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:text=" "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/tvGetPartyCode"
+                android:text="Get Our CODE"
+                android:background="@drawable/custom_circle_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </TableRow>
+
+    </LinearLayout>
+
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fam"
         android:layout_width="wrap_content"
@@ -40,7 +87,7 @@
         android:layout_marginRight="15dp"
         sothree:fab_expandDirection="up"
         sothree:fab_addButtonColorNormal="#0ff"
-        sothree:fab_addButtonColorPressed="#0f0"
+        sothree:fab_addButtonColorPressed="#0ff"
         sothree:fab_addButtonSize="normal"
         >
 
@@ -49,8 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             sothree:fab_size="mini"
-            sothree:fab_icon="@drawable/tab_map"
-            sothree:fab_colorNormal="#0f0"
+            sothree:fab_icon="@drawable/icon_anchor"
             sothree:fab_colorPressed="#ff0"
             />
 
@@ -59,27 +105,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             sothree:fab_size="mini"
-            sothree:fab_icon="@drawable/tab_map"
-            sothree:fab_colorNormal="#0f0"
-            sothree:fab_colorPressed="#0f0"
+            sothree:fab_icon="@drawable/icon_add"
+            sothree:fab_colorPressed="#0ff"
             />
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabJoin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             sothree:fab_size="mini"
-            sothree:fab_icon="@drawable/tab_map"
-            sothree:fab_colorNormal="#00f"
-            sothree:fab_colorPressed="#0f0"
+            sothree:fab_icon="@drawable/icon_join"
+            sothree:fab_colorPressed="#0ff"
             />
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             sothree:fab_size="mini"
-            sothree:fab_icon="@drawable/tab_map"
-            sothree:fab_colorNormal="#f00"
-            sothree:fab_colorPressed="#0f0"
+            sothree:fab_icon="@drawable/icon_out"
+            sothree:fab_colorPressed="#0ff"
             />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

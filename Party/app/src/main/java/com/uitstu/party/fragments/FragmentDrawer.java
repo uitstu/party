@@ -31,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.uitstu.party.R;
 import com.uitstu.party.dialogfragments.FragmentEditInfo;
+import com.uitstu.party.models.Tracking;
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.services.MyService;
 import com.uitstu.party.supports.RoundedImageView;
@@ -85,7 +86,7 @@ public class FragmentDrawer extends Fragment {
                 if (user != null && user.curPartyID != null) {
                     PartyFirebase.getInstant().firebaseDatabase.getReference().child("parties").child(user.curPartyID).child("members").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("status").setValue("offline");
                 }
-
+                Tracking.getInstant().setIsTracking(false);
                 FirebaseAuth.getInstance().signOut();
                 PartyFirebase.user = null;
                 PartyFirebase.getInstant().removeFirebaseListener();

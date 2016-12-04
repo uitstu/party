@@ -1,6 +1,9 @@
 package com.uitstu.party.fragments;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -69,6 +74,9 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
     MapView mapView;
     SupportPlaceAutocompleteFragment edtCompletePlace;
 
+    public LinearLayout layoutShareParty;
+    TextView tvPartyName,tvPartyCode,tvGetPartyCode;
+
     FloatingActionButton fabAnchor, fabCreate, fabJoin, fabOut;
 
     public static MarkerOptions placeFounded;
@@ -92,10 +100,27 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
         } catch (Exception e) {
         }
 
+        layoutShareParty = (LinearLayout) rootView.findViewById(R.id.layoutShareParty);
+        tvPartyName  = (TextView) rootView.findViewById(R.id.tvPartyName);
+        tvPartyCode  = (TextView) rootView.findViewById(R.id.tvPartyCode);
+        tvGetPartyCode  = (TextView) rootView.findViewById(R.id.tvGetPartyCode);
+
+        tvGetPartyCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("PartyCode", tvPartyCode.getText().toString());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(getActivity(),"The code has copied, share it to your friends...",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         fabAnchor = (FloatingActionButton) rootView.findViewById(R.id.fabAnchor);
         fabCreate = (FloatingActionButton) rootView.findViewById(R.id.fabCreate);
         fabJoin = (FloatingActionButton) rootView.findViewById(R.id.fabJoin);
         fabOut = (FloatingActionButton) rootView.findViewById(R.id.fabOut);
+
+        updateFabs(false);
 
         fabAnchor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -336,22 +361,26 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
     }
 
     public void updatePath(){
-        if (Tracking.getInstant().isTracking){
-            //ve duong
-            try {
-                if(line != null)
-                    line.remove();
-                if(direction != null)
-                    direction.removeLine();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            if (Tracking.getInstant().isTracking) {
+                //ve duong
+                try {
+                    if (line != null)
+                        line.remove();
+                    if (direction != null)
+                        direction.removeLine();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-            LatLng place1 = new LatLng(MyService.lat, MyService.lng);
-            LatLng place2 = new LatLng(Tracking.getInstant().latitude, Tracking.getInstant().longitude);
+                LatLng place1 = new LatLng(MyService.lat, MyService.lng);
+                LatLng place2 = new LatLng(Tracking.getInstant().latitude, Tracking.getInstant().longitude);
 
-            direction = new GetDirection(googleMap, getActivity(), place1, place2);
+                direction = new GetDirection(googleMap, getActivity(), place1, place2);
+            }
+        }
+        catch (Exception e){
+
         }
     }
 
@@ -386,10 +415,27 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
     }
 
     public void updateFabs(boolean hasParty){
-        if (hasParty)
+        if (hasParty) {
             fabOut.setVisibility(View.VISIBLE);
-        else
+            fabAnchor.setVisibility(View.VISIBLE);
+        }
+        else {
             fabOut.setVisibility(View.INVISIBLE);
+            fabAnchor.setVisibility(View.INVISIBLE);
+        }
     }
 
+    public void updatePartyName(String partyName){
+        tvPartyName.setText("Party: "+partyName);
+    }
+
+    public void updatePartyCode(String partyCode){
+        tvPartyCode.setText(""+partyCode);
+    }
+
+    public void setPartyInfoInVisible(){
+        tvPartyName.setText("");
+        tvPartyCode.setText("");
+        layoutShareParty.setVisibility(View.INVISIBLE);
+    }
 }

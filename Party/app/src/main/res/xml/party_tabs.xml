@@ -6,7 +6,7 @@
         title="Map" />
     <tab
         id="@+id/tab_chatting"
-        icon="@drawable/tab_map"
+        icon="@drawable/tab_chatting"
         title="Chatting" />
 
     <tab

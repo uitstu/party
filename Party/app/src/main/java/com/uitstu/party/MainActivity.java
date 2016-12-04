@@ -226,4 +226,8 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         isOnline = false;
     }
+
+    public void showToast(String str){
+        Toast.makeText(getApplicationContext(),str,Toast.LENGTH_SHORT).show();
+    }
 }
