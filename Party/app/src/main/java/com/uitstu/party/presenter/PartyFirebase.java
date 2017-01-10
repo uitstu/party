@@ -97,7 +97,6 @@ public class PartyFirebase {
             eventPartyMembers = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Log.i("huy","huy load mem");
                     User usr = dataSnapshot.getValue(User.class);
                     usr.UID = dataSnapshot.getKey();
 
@@ -126,17 +125,15 @@ public class PartyFirebase {
                     if (usr.UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
                         return;
 
-                    if (usr.UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
-                        return;
-
                     if (Tracking.getInstant().user != null){
                         Log.i("huycuoi","huycuoi: thay roi chua???"+Tracking.getInstant().user.UID+" ---- "+usr.UID);
                     }
-                    if (Tracking.getInstant().type == Tracking.MEMBER){
+
+                    if (Tracking.getInstant().type == Tracking.MEMBER && Tracking.getInstant().isTracking){
                         if (Tracking.getInstant().user != null && Tracking.getInstant().user.UID.equals(usr.UID)) {
                             Tracking.getInstant().setLatLng(usr.latitude, usr.longitude);
                             Tracking.getInstant().user = usr;
-                            Log.i("huycuoi","huycuoi: thay roi");
+                            //map.updateMembers(users);
                         }
                     }
 
@@ -156,7 +153,6 @@ public class PartyFirebase {
 
                     if (map != null) {
                         map.updateMembers(users);
-
                     }
                 }
 
@@ -262,7 +258,6 @@ public class PartyFirebase {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     anchor = dataSnapshot.getValue(Anchor.class);
                     if (anchor != null){
-                        Log.i("huycuoi","huycuoi: "+Tracking.getInstant().type+" --- "+Tracking.ANCHOR);
                         if (Tracking.getInstant().type == Tracking.ANCHOR){
                             Tracking.getInstant().setLatLng(anchor.latitude, anchor.longitude);
                         }
@@ -327,7 +322,6 @@ public class PartyFirebase {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Log.i("PartyFirebase: ",""+task.getException());
                         }
                     }
                 });
@@ -339,7 +333,6 @@ public class PartyFirebase {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Log.i("PartyFirebase: ",""+task.getException());
                         }
                         String exString = "";
                         if (task.getException() != null)
@@ -481,7 +474,7 @@ public class PartyFirebase {
                     });
                 }
                 else{
-                    MainActivity.getInstant().showToast("No party with this CODE...");
+                    MainActivity.getInstant().showToast("Mã nhóm không tồn tại");
                 }
             }
 
@@ -526,15 +519,12 @@ public class PartyFirebase {
         String strCurParty = new String(user.curPartyID);
         user.curPartyID = "";
 
-        Log.i("shit","shit: "+strCurParty+" / "+user.curPartyID);
-
         Map<String, Object> postValues = user.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
 
         childUpdates.put("users/"+user.UID,postValues);
         if (!strCurParty.equals("")){
             childUpdates.put("parties/"+strCurParty+"/members/"+user.UID,null);
-            Log.i("shit","shit: "+"parties/"+strCurParty+"/members/"+user.UID);
         }
 
         firebaseDatabase.getReference().updateChildren(childUpdates, new DatabaseReference.CompletionListener() {

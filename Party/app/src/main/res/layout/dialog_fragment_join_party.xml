@@ -7,9 +7,9 @@
 
     <EditText
         android:id="@+id/edtPartyCode"
-        android:hint="name of party..."
+        android:hint="mã nhóm..."
         android:text="-KXKnjF_eT57Iqf3QLCl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="50dp" />
 
 </LinearLayout>

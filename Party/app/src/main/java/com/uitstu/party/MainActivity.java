@@ -37,6 +37,7 @@ import com.uitstu.party.fragments.FragmentAdvertising;
 import com.uitstu.party.fragments.FragmentChatting;
 import com.uitstu.party.fragments.FragmentDrawer;
 import com.uitstu.party.fragments.FragmentMap;
+import com.uitstu.party.models.Tracking;
 import com.uitstu.party.models.User;
 import com.uitstu.party.presenter.PartyFirebase;
 import com.uitstu.party.services.MyService;
@@ -71,16 +72,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Tracking.getInstant().isTracking = false;
+        Tracking.user = null;
+        Tracking.anchor = null;
+        Tracking.placeFounded = null;
+
         mainActivity = this;
 
         isOnline = true;
 
         MemberAvatars.getInstant(getBaseContext());
 
-        //MemberAvatars.getInstant(this);
-
-        //
-        //
         PartyFirebase.getInstant().setFirebaseListener();
         PartyFirebase.getInstant().addFirebaseListener();
         if (PartyFirebase.user != null && PartyFirebase.user.curPartyID != null && !PartyFirebase.user.curPartyID.equals("")){
@@ -108,16 +110,10 @@ public class MainActivity extends AppCompatActivity {
         MyService.activity = this;
         Intent in = new Intent(MainActivity.this, MyService.class);
         startService(in);
-/*
-        for (int i=0; i<PartyFirebase.users.size(); i++){
-            MemberAvatars.getInstant().putToList(PartyFirebase.users.get(i).UID,PartyFirebase.users.get(i).urlAvatar,MainActivity.this);
-        }
-        Log.i("huyloadhinh","huyloadhinh so luong: "+PartyFirebase.users.size());
-        */
+
         ((Button) findViewById(R.id.bt)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //updateMembers();
                 FragmentMap.getInstant().updateMembers(PartyFirebase.users);
             }
         });
@@ -132,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception e){
 
         }
-        Log.i("huyload","huyload mainactivity size"+ PartyFirebase.users.size());
+
         FragmentMap.getInstant().updateMembers(PartyFirebase.users);
     }
 

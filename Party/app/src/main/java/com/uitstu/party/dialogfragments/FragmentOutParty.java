@@ -25,17 +25,17 @@ public class FragmentOutParty extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle("Outting");
+        builder.setTitle("RỜI NHÓM");
 
-        builder.setMessage("Are you sure?");
+        builder.setMessage("Bạn đã chắc chắn?");
 
-        builder.setPositiveButton("OUT", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("RỜI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 PartyFirebase.getInstant().outParty();
             }
         });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("HỦY", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

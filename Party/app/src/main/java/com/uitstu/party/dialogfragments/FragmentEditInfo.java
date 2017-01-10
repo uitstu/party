@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,7 @@ public class FragmentEditInfo extends DialogFragment {
         View rootView = inflater.inflate(R.layout.dialog_fragment_edit, null);
 
         tvChangeAvatar = (TextView) rootView.findViewById(R.id.tvChangeAvatar);
+        tvChangeAvatar.setText(Html.fromHtml("<u>Thay ảnh đại diện</u>"));
 
         etName = (EditText) rootView.findViewById(R.id.etName);
         etMaxVelocity = (EditText) rootView.findViewById(R.id.etMaxVelocity);
@@ -89,16 +91,16 @@ public class FragmentEditInfo extends DialogFragment {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select the user's avatar"), CHANGE_AVATAR_REQUEST);
+                startActivityForResult(Intent.createChooser(intent,"Chọn ảnh đại diện"), CHANGE_AVATAR_REQUEST);
             }
         });
 
         //
 
-        builder.setTitle("Editing");
+        builder.setTitle("Chỉnh sửa");
         builder.setView(rootView);
 
-        builder.setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("CẬP NHẬT", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -141,7 +143,7 @@ public class FragmentEditInfo extends DialogFragment {
 
             }
         });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("HỦY", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

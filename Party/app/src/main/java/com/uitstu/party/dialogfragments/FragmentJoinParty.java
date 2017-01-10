@@ -30,16 +30,16 @@ public class FragmentJoinParty extends DialogFragment {
 
         edtPartyCode = (EditText) rootView.findViewById(R.id.edtPartyCode);
 
-        builder.setTitle("Joining");
+        builder.setTitle("Tham gia nhóm");
         builder.setView(rootView);
 
-        builder.setPositiveButton("JOIN", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("THAM GIA", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 PartyFirebase.getInstant().joinParty(edtPartyCode.getText().toString());
             }
         });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("HỦY", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

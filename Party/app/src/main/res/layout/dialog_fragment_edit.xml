@@ -20,7 +20,7 @@
 
         <TextView
             android:id="@+id/tvChangeAvatar"
-            android:text="Change your avatar"
+            android:text="Thay ảnh đại diện"
             android:textSize="20dp"
             android:textColor="#00f"
             android:layout_centerHorizontal="true"
@@ -30,7 +30,7 @@
 
         <EditText
             android:id="@+id/etName"
-            android:hint="Type your name..."
+            android:hint="tên của bạn..."
             android:inputType="text"
             android:textSize="25dp"
             android:layout_below="@+id/tvChangeAvatar"
@@ -40,6 +40,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
+            android:visibility="invisible"
             android:id="@+id/etMaxVelocity"
             android:textSize="25dp"
             android:hint="Type your max velocity"
@@ -55,7 +56,7 @@
             android:id="@+id/switchVerhicle"
             android:layout_below="@+id/etMaxVelocity"
             android:layout_centerHorizontal="true"
-            android:text="Driving mode: "
+            android:text="Phương tiện ôtô: "
             android:textSize="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

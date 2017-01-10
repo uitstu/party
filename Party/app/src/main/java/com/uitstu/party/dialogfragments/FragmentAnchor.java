@@ -28,11 +28,11 @@ public class FragmentAnchor extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle("Dropping");
+        builder.setTitle("Thả neo");
 
-        builder.setMessage("Drop anchor here?");
+        builder.setMessage("Thả neo ở đây?");
 
-        builder.setPositiveButton("DROP", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("THẢ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (PartyFirebase.user != null && PartyFirebase.user.curPartyID != null) {
@@ -44,9 +44,9 @@ public class FragmentAnchor extends DialogFragment {
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             try {
                                 if (databaseError == null) {
-                                    Toast.makeText(MainActivity.getInstant().getApplicationContext(), "The new anchor have dropped...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.getInstant().getApplicationContext(), "Đã thả neo", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(MainActivity.getInstant().getApplicationContext(), "Your connection is weak, check it...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.getInstant().getApplicationContext(), "Kết nối mạng có vấn đề", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             catch (Exception ex){
@@ -58,7 +58,7 @@ public class FragmentAnchor extends DialogFragment {
 
             }
         });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("HỦY", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

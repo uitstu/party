@@ -29,16 +29,16 @@ public class FragmentCreateParty extends DialogFragment {
 
         edtPartyName = (EditText) rootView.findViewById(R.id.edtPartyName);
 
-        builder.setTitle("Creating");
+        builder.setTitle("Tạo nhóm");
         builder.setView(rootView);
 
-        builder.setPositiveButton("CREATE", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("TẠO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 PartyFirebase.getInstant().createParty(edtPartyName.getText().toString());
             }
         });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("HỦY", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

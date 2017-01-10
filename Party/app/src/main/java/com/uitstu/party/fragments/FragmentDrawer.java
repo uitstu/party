@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +77,10 @@ public class FragmentDrawer extends Fragment {
         tvCurVelocity = (TextView)view.findViewById(R.id.tvCurVelocity);
         tvVerhicle = (TextView)view.findViewById(R.id.tvVerhicle);
         tvEditInfo = (TextView)view.findViewById(R.id.tvEditInfo);
+        tvEditInfo.setText(Html.fromHtml("<u>Cập nhật thông tin</u>"));
+
         tvLogout = (TextView)view.findViewById(R.id.tvLogout);
+        tvLogout.setText(Html.fromHtml("<u>Đăng xuất</u>"));
 
         ivDrawerAvatar = (ImageView)view.findViewById(R.id.ivDrawerAvatar);
 
@@ -102,7 +106,7 @@ public class FragmentDrawer extends Fragment {
             @Override
             public void onClick(View view) {
                 DialogFragment dialog = new FragmentEditInfo();
-                dialog.show(getChildFragmentManager(),"editing");
+                dialog.show(getChildFragmentManager(),"chỉnh sửa");
             }
         });
 
@@ -115,30 +119,18 @@ public class FragmentDrawer extends Fragment {
 
         if (user != null){
             if (user.name != null)
-                tvDrawerName.setText(strEnter+"I'm "+user.name+"..."+strEnter);
+                tvDrawerName.setText(strEnter+"Tôi là "+user.name+""+strEnter);
 
             if (user.vehicle != null && user.vehicle.equals("car"))
-                tvVerhicle.setText("I'm traveling by car..."+strEnter);
+                tvVerhicle.setText("Tôi di chuyển bằng ôtô"+strEnter);
             else
-                tvVerhicle.setText("I'm traveling by motorbike..."+strEnter);
+                tvVerhicle.setText("Tôi di chuyển bằng xe máy"+strEnter);
         }
 
         tvCurVelocity.setText("\nCurrent velocity: Waiting"+strEnter);
 
-        tvDrawerLocation.setText("My location is " + getAddress(getActivity(), MyService.lat, MyService.lng)+"..."+strEnter);
-/*
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        //StorageReference storageRef = storage.getReferenceFromUrl("gs://party2-949d9.appspot.com");
-        //StorageReference pathReference = storageRef.child("avatars/"+ FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg");
-        StorageReference pathReference = storage.getReferenceFromUrl(PartyFirebase.user.urlAvatar);
+        tvDrawerLocation.setText("Vị trí của tôi là " + getAddress(getActivity(), MyService.lat, MyService.lng)+""+strEnter);
 
-        Glide.clear(ivDrawerAvatar);
-        Glide.with(getActivity().getApplicationContext())
-                .using(new FirebaseImageLoader())
-                .load(pathReference)
-                .into(ivDrawerAvatar);
-*/
-        //
         if (PartyFirebase.user != null && PartyFirebase.user.urlAvatar != null) {
             if (!PartyFirebase.user.urlAvatar.equals(""))
                 Picasso.with(getActivity()).load(PartyFirebase.user.urlAvatar).into(ivDrawerAvatar);
@@ -150,7 +142,7 @@ public class FragmentDrawer extends Fragment {
 
     public String getAddress(Context context, double lat, double lng) {
         if (lat == 0.0 && lng == 0.0)
-            return "My place: Waiting";
+            return "Vị trí của tôi: đang nhập dữ liệu";
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
@@ -195,9 +187,9 @@ public class FragmentDrawer extends Fragment {
 
         if (PartyFirebase.user != null && PartyFirebase.user.vehicle != null && !PartyFirebase.user.vehicle.equals("")) {
             if (PartyFirebase.user.vehicle.equals("car"))
-                tvVerhicle.setText("I'm traveling by car...\n");
+                tvVerhicle.setText("Tôi di chuyển bằng ôtô\n");
             else
-                tvVerhicle.setText("I'm traveling by motorbike...\n");
+                tvVerhicle.setText("Tôi di chuyển bằng xe máy...\n");
         }
 
     }

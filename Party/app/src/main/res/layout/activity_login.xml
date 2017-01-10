@@ -13,9 +13,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icon_logo"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            />
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            />
         <EditText
-            android:text="uitstu@gmail.com"
             android:id="@+id/edtID"
+            android:text="uitstu@gmail.com"
             android:inputType="textEmailAddress"
             android:background="@color/place_autocomplete_search_hint"
             android:hint="ID"
@@ -50,13 +60,34 @@
 
         <Button
             android:id="@+id/btnLogin"
-            android:text="Login"
+            android:text="Đăng nhập"
             android:layout_gravity="center"
-            android:layout_width="100dp"
+            android:background="#58D3F7"
+            android:layout_width="150dp"
             android:layout_height="50dp" />
 
         <TextView
-            android:text="Register"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            />
+
+        <TextView
+            android:id="@+id/tvToRegister"
+            android:text="Đăng ký"
+            android:textSize="18dp"
+            android:textColor="#00f"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            />
+
+        <TextView
+            android:id="@+id/tvForgetPassword"
+            android:text="Quên mật khẩu?"
             android:textSize="18dp"
             android:textColor="#00f"
             android:layout_gravity="center"

@@ -173,34 +173,6 @@ public class MyService extends Service {
             catch (Exception e){
 
             }
-
-            //huy lock
-            /*
-            MyService.curSpeed = location.getSpeed();
-
-            Log.i("cothaydoi - ","speed: "+location.getSpeed()+", \ncurSpeed: "
-                    +MyService.curSpeed+", maxSpeed: "+MyService.maxSpeed);
-
-            try {
-                textView.setText("Toc do: " + Double.toString((double) curSpeed) + " - Vi tri: "
-                        + "\n" + Double.toString((double) location.getLatitude())
-                        + " : " + Double.toString((double) location.getLongitude()));
-            }
-            catch (Exception ex){
-
-            }
-
-            try {
-                if (MyService.curSpeed >= MyService.maxSpeed) {
-                    if (!MyService.mediaPlayer.isPlaying())
-                        MyService.mediaPlayer.start();
-                    MyService.vibrator.vibrate(900);
-                }
-            }
-            catch (Exception ex){
-
-            }
-            */
         }
 
         @Override

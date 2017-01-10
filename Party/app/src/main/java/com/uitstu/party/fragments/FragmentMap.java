@@ -109,9 +109,9 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             @Override
             public void onClick(View view) {
                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("PartyCode", tvPartyCode.getText().toString());
+                ClipData clip = ClipData.newPlainText("Mã nhóm", tvPartyCode.getText().toString());
                 clipboard.setPrimaryClip(clip);
-                Toast.makeText(getActivity(),"The code has copied, share it to your friends...",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Đã lưu mã nhóm vào bộ nhớ, hãy chia sẻ với bạn bè",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -126,7 +126,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             @Override
             public void onClick(View view) {
                 DialogFragment dialog = new FragmentAnchor();
-                dialog.show(getChildFragmentManager(),"dropping");
+                dialog.show(getChildFragmentManager(),"thả");
             }
         });
 
@@ -134,7 +134,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             @Override
             public void onClick(View view) {
                 DialogFragment dialog = new FragmentCreateParty();
-                dialog.show(getChildFragmentManager(),"creating");
+                dialog.show(getChildFragmentManager(),"tạo");
             }
         });
 
@@ -142,7 +142,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             @Override
             public void onClick(View view) {
                 DialogFragment dialog = new FragmentJoinParty();
-                dialog.show(getChildFragmentManager(),"joining");
+                dialog.show(getChildFragmentManager(),"vào");
             }
         });
 
@@ -150,7 +150,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             @Override
             public void onClick(View view) {
                 DialogFragment dialog = new FragmentOutParty();
-                dialog.show(getChildFragmentManager(),"outting");
+                dialog.show(getChildFragmentManager(),"rời");
             }
         });
 
@@ -185,18 +185,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
 
             }
         });
-
-
-        //
-        /*
-        try {
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(MyService.lat, MyService.lng), 10);
-            googleMap.moveCamera(cameraUpdate);
-        }
-        catch (Exception e){
-
-        }
-        */
 
         return rootView;
     }
@@ -260,26 +248,24 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
                 Double lat = marker.getPosition().latitude;
                 Double lng = marker.getPosition().longitude;
 
-                if ((lat - PartyFirebase.anchor.latitude<0.000000000001) && (lng - PartyFirebase.anchor.longitude<0.000000000001)){
-                    Log.i("huycuoi","huycuoi: true1"+lat+" ---- "+PartyFirebase.anchor.latitude+" ---- "+lng+" ---- "+PartyFirebase.anchor.longitude);
+                if ((int)((lat - PartyFirebase.anchor.latitude)*1000) == 0 && (int)((lng - PartyFirebase.anchor.longitude)*1000) == 0){
+                    Log.i("huycuoi","huycuoi anchor: true1"+lat+" ---- "+PartyFirebase.anchor.latitude+" ---- "+lng+" ---- "+PartyFirebase.anchor.longitude);
                     Tracking.getInstant().setType(Tracking.ANCHOR);
                 }
                 else
-                if (placeFounded != null && ((lat - placeFounded.getPosition().latitude<0.000000000001) && (lng - placeFounded.getPosition().longitude<0.000000000001))){
-                    Log.i("huycuoi","huycuoi: placeFounder dc chon");
+                if (placeFounded != null && (int)((lat - placeFounded.getPosition().latitude)*1000) == 0 && (int)((lng - placeFounded.getPosition().longitude)*1000)==0){
                     Tracking.getInstant().setType(Tracking.PLACE);
                 }
                 else{
                     Tracking.getInstant().setType(Tracking.MEMBER);
                     for (int i=0; i<PartyFirebase.users.size(); i++){
-                        Log.i("huycuoi","huycuoi: xo thu"+PartyFirebase.users.get(i).UID);
-                        if ((lat - PartyFirebase.users.get(i).latitude<0.000000000001) && (lng - PartyFirebase.users.get(i).longitude<0.000000000001)){
+                        if ((int)((lat - PartyFirebase.users.get(i).latitude)*1000)==0 && (int)((lng - PartyFirebase.users.get(i).longitude)*1000)==0){
                             Tracking.user = PartyFirebase.users.get(i);
-                            Log.i("huycuoi","huycuoi: UID"+Tracking.user.UID);
                             break;
                         }
                     }
                 }
+
                 Tracking.getInstant().setLatLng(lat,lng);
                 Tracking.getInstant().setIsTracking(true);
                 updateMembers(PartyFirebase.users);
@@ -287,8 +273,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             }
         });
         //
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(MyService.lat, MyService.lng), 14);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(10.8354076, 106.6487244), 14);
+        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(MyService.lat, MyService.lng), 14);
         googleMap.moveCamera(cameraUpdate);
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -327,7 +313,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
 
-            if (users.get(i).status != null && users.get(i).equals("online")) {
+            if (users.get(i).status != null && users.get(i).status.equals("online")) {
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(overlayMapIcon(MemberAvatars.getInstant().getBitmap(users.get(i).UID),true)));
             }
             else{
@@ -426,7 +412,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
     }
 
     public void updatePartyName(String partyName){
-        tvPartyName.setText("Party: "+partyName);
+        tvPartyName.setText("Tên nhóm: "+partyName);
     }
 
     public void updatePartyCode(String partyCode){

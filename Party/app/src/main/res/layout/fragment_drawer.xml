@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="#fff"
-    android:layout_width="400dp"
+    android:layout_width="300dp"
     android:layout_height="match_parent"
     >
 
@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/tvEditInfo"
             android:layout_centerHorizontal="true"
-            android:text="Edit your info"
+            android:text="Cập nhật thông tin"
             android:textSize="25dp"
             android:textColor="#00f"
             android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:id="@+id/tvLogout"
             android:layout_below="@+id/tvEditInfo"
             android:layout_centerHorizontal="true"
-            android:text="Log out"
+            android:text="Đăng xuất"
             android:textSize="25dp"
             android:textColor="#00f"
             android:layout_width="wrap_content"
@@ -42,14 +42,14 @@
             android:id="@+id/ivDrawerAvatar"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:background="@drawable/custom_circle_views"
             />
 
         <TextView
             android:id="@+id/tvDrawerName"
-            android:text="\nYour name: Waiting"
+            android:text="\nTên: đang nhận dữ liệu"
             android:textSize="25dp"
             android:layout_below="@+id/ivDrawerAvatar"
             android:layout_centerHorizontal="true"
@@ -59,7 +59,7 @@
 
         <TextView
             android:id="@+id/tvDrawerLocation"
-            android:text="\nYour location: Waiting"
+            android:text="\nVị trí: đang nhận dữ liệu"
             android:textSize="25dp"
             android:layout_below="@+id/tvDrawerName"
             android:layout_centerHorizontal="true"
@@ -69,7 +69,7 @@
 
         <TextView
             android:id="@+id/tvVerhicle"
-            android:text="\nYour going mode: Waiting"
+            android:text="\nPhương tiện: đang nhận dữ liệu"
             android:textSize="25dp"
             android:layout_below="@+id/tvDrawerLocation"
             android:layout_centerHorizontal="true"
@@ -78,6 +78,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            android:visibility="invisible"
             android:id="@+id/tvCurVelocity"
             android:text="\n\nWith velocity: Waiting"
             android:textSize="25dp"
