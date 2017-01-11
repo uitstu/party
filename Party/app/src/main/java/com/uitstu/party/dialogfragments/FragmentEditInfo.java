@@ -49,7 +49,7 @@ import static com.uitstu.party.presenter.PartyFirebase.user;
 public class FragmentEditInfo extends DialogFragment {
 
     public static int CHANGE_AVATAR_REQUEST = 8;
-    TextView tvChangeAvatar;
+    TextView tvChangeAvatar, tvChangePasword;
     EditText etName, etMaxVelocity;
     Switch switchVerhicle;
     public ImageView ivAvatar;
@@ -76,6 +76,17 @@ public class FragmentEditInfo extends DialogFragment {
 
         tvChangeAvatar = (TextView) rootView.findViewById(R.id.tvChangeAvatar);
         tvChangeAvatar.setText(Html.fromHtml("<u>Thay ảnh đại diện</u>"));
+
+        tvChangePasword = (TextView) rootView.findViewById(R.id.tvChangePasword);
+        tvChangePasword.setText(Html.fromHtml("<u>Đổi mật khẩu</u>"));
+
+        tvChangePasword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialog = new FragmentChangePassword();
+                dialog.show(getChildFragmentManager(),"Đổi mật khẩu");
+            }
+        });
 
         etName = (EditText) rootView.findViewById(R.id.etName);
         etMaxVelocity = (EditText) rootView.findViewById(R.id.etMaxVelocity);

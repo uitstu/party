@@ -25,7 +25,7 @@
             />
         <EditText
             android:id="@+id/edtID"
-            android:text="uitstu@gmail.com"
+            android:text=""
             android:inputType="textEmailAddress"
             android:background="@color/place_autocomplete_search_hint"
             android:hint="ID"
@@ -42,7 +42,7 @@
             android:layout_height="5dp" />
 
         <EditText
-            android:text="123456"
+            android:text=""
             android:inputType="textPassword"
             android:id="@+id/edtPassword"
             android:background="@color/place_autocomplete_search_hint"

@@ -8,7 +8,7 @@
     <EditText
         android:id="@+id/edtPartyCode"
         android:hint="mã nhóm..."
-        android:text="-KXKnjF_eT57Iqf3QLCl"
+        android:text=""
         android:layout_width="match_parent"
         android:layout_height="50dp" />
 

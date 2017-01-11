@@ -39,8 +39,9 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content" />
 
+
         <EditText
-            android:visibility="invisible"
+            android:visibility="gone"
             android:id="@+id/etMaxVelocity"
             android:textSize="25dp"
             android:hint="Type your max velocity"
@@ -50,7 +51,6 @@
             android:gravity="center_vertical"
             android:layout_width="300dp"
             android:layout_height="wrap_content" />
-
 
         <Switch
             android:id="@+id/switchVerhicle"
@@ -62,7 +62,28 @@
             android:layout_height="wrap_content"
             android:textOn="Car"
             android:textOff="Bike"
-             />
+            />
+
+        <TextView
+            android:id="@+id/space"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/switchVerhicle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvChangePasword"
+            android:text="Đổi mật khẩu"
+            android:textSize="20dp"
+            android:textColor="#00f"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+
 
 
     </RelativeLayout>

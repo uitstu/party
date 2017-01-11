@@ -68,8 +68,8 @@
             android:layout_width="match_parent"
             android:background="#58D3F7"
             android:alpha="0.8"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp">
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp">
         </Button>
 
     </LinearLayout>

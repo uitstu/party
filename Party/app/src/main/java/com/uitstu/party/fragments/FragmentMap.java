@@ -245,30 +245,32 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, IUpdate
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Double lat = marker.getPosition().latitude;
-                Double lng = marker.getPosition().longitude;
+                try {
+                    Double lat = marker.getPosition().latitude;
+                    Double lng = marker.getPosition().longitude;
 
-                if ((int)((lat - PartyFirebase.anchor.latitude)*1000) == 0 && (int)((lng - PartyFirebase.anchor.longitude)*1000) == 0){
-                    Log.i("huycuoi","huycuoi anchor: true1"+lat+" ---- "+PartyFirebase.anchor.latitude+" ---- "+lng+" ---- "+PartyFirebase.anchor.longitude);
-                    Tracking.getInstant().setType(Tracking.ANCHOR);
-                }
-                else
-                if (placeFounded != null && (int)((lat - placeFounded.getPosition().latitude)*1000) == 0 && (int)((lng - placeFounded.getPosition().longitude)*1000)==0){
-                    Tracking.getInstant().setType(Tracking.PLACE);
-                }
-                else{
-                    Tracking.getInstant().setType(Tracking.MEMBER);
-                    for (int i=0; i<PartyFirebase.users.size(); i++){
-                        if ((int)((lat - PartyFirebase.users.get(i).latitude)*1000)==0 && (int)((lng - PartyFirebase.users.get(i).longitude)*1000)==0){
-                            Tracking.user = PartyFirebase.users.get(i);
-                            break;
+                    if ((int) ((lat - PartyFirebase.anchor.latitude) * 1000) == 0 && (int) ((lng - PartyFirebase.anchor.longitude) * 1000) == 0) {
+                        Log.i("huycuoi", "huycuoi anchor: true1" + lat + " ---- " + PartyFirebase.anchor.latitude + " ---- " + lng + " ---- " + PartyFirebase.anchor.longitude);
+                        Tracking.getInstant().setType(Tracking.ANCHOR);
+                    } else if (placeFounded != null && (int) ((lat - placeFounded.getPosition().latitude) * 1000) == 0 && (int) ((lng - placeFounded.getPosition().longitude) * 1000) == 0) {
+                        Tracking.getInstant().setType(Tracking.PLACE);
+                    } else {
+                        Tracking.getInstant().setType(Tracking.MEMBER);
+                        for (int i = 0; i < PartyFirebase.users.size(); i++) {
+                            if ((int) ((lat - PartyFirebase.users.get(i).latitude) * 1000) == 0 && (int) ((lng - PartyFirebase.users.get(i).longitude) * 1000) == 0) {
+                                Tracking.user = PartyFirebase.users.get(i);
+                                break;
+                            }
                         }
                     }
-                }
 
-                Tracking.getInstant().setLatLng(lat,lng);
-                Tracking.getInstant().setIsTracking(true);
-                updateMembers(PartyFirebase.users);
+                    Tracking.getInstant().setLatLng(lat, lng);
+                    Tracking.getInstant().setIsTracking(true);
+                    updateMembers(PartyFirebase.users);
+                }
+                catch (Exception e){
+                    Toast.makeText(getActivity().getApplicationContext(), "Tín hiệu yếu", Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
         });

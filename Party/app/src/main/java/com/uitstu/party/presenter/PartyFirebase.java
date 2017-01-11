@@ -179,7 +179,7 @@ public class PartyFirebase {
 
                             }
 
-                            users.add(usr);
+                            //users.add(usr);
                         }
                     }
 
